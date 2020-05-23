@@ -1,7 +1,7 @@
 function getRecords(request, callback) {
     // const proxyurl = "https://cors-anywhere.herokuapp.com/";
     const proxyurl = ""
-    var targeturl = "http://dione.batstate-u.edu.ph/public/sites/apps/student/ajax.php?" + request;
+    var targeturl = "https://dione.batstate-u.edu.ph/public/sites/apps/student/ajax.php?" + request;
     var url = proxyurl + targeturl;
     $.ajax({
         url: url,
