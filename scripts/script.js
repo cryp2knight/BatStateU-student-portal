@@ -31,7 +31,7 @@ function enrolmentData(data) {
 function table(data, year, sem) {
     var head = `
     <table class="table is-hoverable is-fullwidth is-striped is-narrow is-bordered">
-    <caption>` + year + `|` + sem + `</caption>
+    <caption><span class="tag is-info"><b>` + year + `</b>&nbsp;&nbsp;` + sem + `</span></caption>
       <tr>
         <th>Course code</th>
         <th>Description</th>
@@ -46,7 +46,7 @@ function table(data, year, sem) {
         gwa = 0;
     for (i = 0; i < data.length; i++) {
         var stats = "is-success"
-        if (data[i].status === "FAILED"){
+        if (data[i].status === "FAILED") {
             stats = `is-danger`
         }
         head += `
@@ -56,19 +56,20 @@ function table(data, year, sem) {
             <td>` + data[i].subject_credits + `</td>
             <td>` + data[i].grade + `</td>
             <td>` + data[i].instructor_name + `</td>
-            <td><span class="tag `+stats+` is-light">` + data[i].status + `</span></td>
+            <td><span class="tag ` + stats + ` is-light">` + data[i].status + `</span></td>
           </tr>
         `
         totalUnits += data[i].subject_credits
-        if (isNaN(data[i].grade)){
+        if (isNaN(data[i].grade)) {
             weightedSum += data[i].subject_credits * data[i].grade2
-        }else{
+        } else {
             weightedSum += data[i].subject_credits * data[i].grade
         }
     }
     gwa = weightedSum / totalUnits
     gwa = gwa.toFixed(2);
-    head += `</table>Total Units: <b>` + totalUnits + `</b>&nbsp;&nbsp;&nbsp;GWA: <b>` + gwa + `</b><br><br>`
+    head += `</table><span class="tag is-warning">Total Units:&nbsp;<b>` + totalUnits + `</b></span>&nbsp;&nbsp;
+    <span class="tag is-success">GWA:&nbsp;<b>` + gwa + `</b></span><br><hr>`
     return head
 }
 $(document).ready(function($) {
