@@ -1,5 +1,6 @@
 function getRecords(request, callback) {
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    // const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const proxyurl = ""
     var targeturl = "http://dione.batstate-u.edu.ph/public/sites/apps/student/ajax.php?" + request;
     var url = proxyurl + targeturl;
     $.ajax({
@@ -37,25 +38,33 @@ function table(data, year, sem) {
         <th>Credits</th>
         <th>Grade</th>
         <th>Instructor</th>
-        <th>status</th>
+        <th>Status</th>
       </tr>
     `
     var totalUnits = 0,
         weightedSum = 0,
         gwa = 0;
     for (i = 0; i < data.length; i++) {
+        var stats = "is-success"
+        if (data[i].status === "FAILED"){
+            stats = `is-danger`
+        }
         head += `
         <tr>
             <td>` + data[i].subject_code + `</td>
             <td>` + data[i].subject_description + `</td>
             <td>` + data[i].subject_credits + `</td>
-            <td>` + data[i].grade_final + `</td>
+            <td>` + data[i].grade + `</td>
             <td>` + data[i].instructor_name + `</td>
-            <td>` + data[i].status + `</td>
+            <td><span class="tag `+stats+` is-light">` + data[i].status + `</span></td>
           </tr>
         `
         totalUnits += data[i].subject_credits
-        weightedSum += data[i].subject_credits * data[i].grade_final
+        if (isNaN(data[i].grade)){
+            weightedSum += data[i].subject_credits * data[i].grade2
+        }else{
+            weightedSum += data[i].subject_credits * data[i].grade
+        }
     }
     gwa = weightedSum / totalUnits
     gwa = gwa.toFixed(2);
@@ -93,7 +102,7 @@ function retrieve() {
                 var gbs = groupBy(groupedByYear[gy], 'semester')
                 for (g in gbs) {
                     tbl += table(gbs[g], gy, g)
-                    console.log(gbs[g])
+                    // console.log(gbs[g])
                     sem = g
                 }
                 sy = gy
@@ -102,7 +111,7 @@ function retrieve() {
             $("#photo").attr('src', 'http://dione.batstate-u.edu.ph/public/sites/api/fetch_photo.php?srcode=' + srcode);
             var enrolment = getRecords("do=fetch_enrollment_records&schoolyear=" + sy + "&semester=" + sem + "&srcode=" + srcode, function(records) {
                 $("#enrolment").html(enrolmentData(records[0]));
-                console.log(records[0])
+                // console.log(records[0])
                 $("#loading").fadeOut('slow', function() {
                     $("#loading").removeClass('pageloader')
                     $("#loading").text('')
@@ -110,8 +119,8 @@ function retrieve() {
                 });
             })
         } else {
-            $("#enrolment").text('No data found!')
-            $("#grades").text('')
+            $("#enrolment").text('')
+            $("#grades").html('<span class="tag is-danger is-light">No record found!</span>')
             $("#loading").fadeOut('slow', function() {
                 $("#loading").removeClass('pageloader')
                 $("#loading").text('')
