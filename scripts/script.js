@@ -118,7 +118,7 @@ $(document).ready(function($) {
     });
     $('#srcode').on('keypress', function(event) {
         if (event.which === 13) {
-            retrieve();
+            // retrieve();
         }
     });
 });
